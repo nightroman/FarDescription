@@ -1,0 +1,8 @@
+.vs/
+bin/
+obj/
+z
+*.htm*
+AssemblyInfo.cs
+FarDescription.psd1
+FarDescription.csproj.user

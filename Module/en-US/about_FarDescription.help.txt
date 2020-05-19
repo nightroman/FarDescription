@@ -1,0 +1,57 @@
+﻿TOPIC
+    about_FarDescription
+
+SHORT DESCRIPTION
+    Far Manager style descriptions of files and directories
+
+LONG DESCRIPTION
+    The module is designed for Far Manager but it does not require it, it works
+    in any PowerShell host, e.g. console, VSCode, ISE, PowerShellFar, and etc.
+
+SETTINGS
+    The module settings are similar to Far Manager description settings.
+    They are defined as properties of this global object:
+
+        [FarDescription.Settings]::Default
+
+    Available properties (named as Far settings) and default values:
+
+        ListNames = @('Descript.ion', 'Files.bbs')
+        AnsiByDefault = $false
+        SaveInUTF = $true
+        SetHidden = $true
+
+COMMANDS
+    The module provides the following commands:
+
+        Update-FarDescription
+        Sync-FarDescriptionSynopsis
+
+FEATURES
+    The module adds extra members to the [System.IO.FileSystemInfo] items
+    (files or directories, items of the FileSystem provider).
+
+    =================================================================
+
+    [System.IO.FileSystemInfo]
+    (files and directories)
+
+    FarDescription property
+        Gets or sets the item description.
+        Empty descriptions are removed.
+        Empty description files are also removed.
+
+    FarMoveTo() method
+        It calls the .NET method MoveTo() and then moves the description.
+
+    =================================================================
+
+    [System.IO.FileInfo]
+    (files)
+
+    FarCopyTo() method
+        It calls the .NET method CopyTo() and then copies the description.
+        Note that this method returns the copied item.
+
+    FarDelete() method
+        It calls the .NET method Delete() and then removes the description.
