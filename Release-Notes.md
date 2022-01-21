@@ -1,5 +1,9 @@
 # FarDescription Release Notes
 
+## v1.0.1
+
+Maintenance.
+
 ## v1.0.0
 
 Moved from FarNet to its own repository and pushed to PSGallery.

@@ -5,10 +5,10 @@
 
 param(
 	$Configuration = 'Release',
-	$TargetFrameworkVersion = 'v3.5'
+	$TargetFrameworkVersion = 'v4.0'
 )
 
-Set-StrictMode -Version 2
+Set-StrictMode -Version Latest
 $ModuleName = 'FarDescription'
 $ModuleRoot = "$(if ($_=$env:ProgramW6432) {$_} else {$env:ProgramFiles})\WindowsPowerShell\Modules\$ModuleName"
 
@@ -18,7 +18,7 @@ function Get-Version {
 }
 
 # Synopsis: Clean the workspace.
-task Clean {
+task clean {
 	remove z, Src\bin, Src\obj, README.htm
 }
 
@@ -28,7 +28,7 @@ $MetaParam = @{
 }
 
 # Synopsis: Generate or update meta files.
-task Meta @MetaParam {
+task meta @MetaParam {
 	$Version = Get-Version
 	$Project = 'https://github.com/nightroman/FarDescription'
 	$Summary = 'Far Manager style descriptions of files and directories.'
@@ -58,7 +58,7 @@ task Meta @MetaParam {
 		PSData = @{
 			Tags = 'FarManager', 'Description'
 			ProjectUri = '$Project'
-			LicenseUri = '$Project/blob/master/LICENSE.txt'
+			LicenseUri = '$Project/blob/master/LICENSE'
 			ReleaseNotes = '$Project/blob/master/Release-Notes.md'
 		}
 	}
@@ -83,7 +83,7 @@ using System.Runtime.InteropServices;
 }
 
 # Synopsis: Build the project (and post-build Publish).
-task Build Meta, {
+task build meta, {
 	exec { & (Resolve-MSBuild) @(
 		"Src\$ModuleName.csproj"
 		'/t:Build'
@@ -94,14 +94,14 @@ task Build Meta, {
 }
 
 # Synopsis: Publish the module (post-build).
-task Publish {
+task publish {
 	if ($Configuration -eq 'Release') {remove $ModuleRoot}
 	exec { robocopy Module $ModuleRoot /s /np /r:0 /xf *-Help.ps1 } (0..3)
 	exec { robocopy Src\bin\$Configuration $ModuleRoot /s /np /r:0 } (0..3)
 }
 
 # Synopsis: Build help by Helps (https://github.com/nightroman/Helps).
-task Help @{
+task help @{
 	Inputs = {Get-Item Src\Commands\*, Module\en-US\$ModuleName.dll-Help.ps1}
 	Outputs = {"$ModuleRoot\en-US\$ModuleName.dll-Help.xml"}
 	Jobs = {
@@ -111,29 +111,24 @@ task Help @{
 }
 
 # Synopsis: Make an test help.
-task TestHelp Help, {
+task testHelp help, {
 	. Helps.ps1
 	Test-Helps Module\en-US\$ModuleName.dll-Help.ps1
 }
 
-# Synopsis: Test in the current PowerShell.
-task Test {
+# Synopsis: Test current PowerShell.
+task test {
 	$ErrorView = 'NormalView'
 	Invoke-Build ** Tests
 }
 
-# Synopsis: Test in PowerShell v2.
-task Test2 {
-	exec {powershell -Version 2 -NoProfile -Command Invoke-Build Test}
-}
-
-# Synopsis: Test in PowerShell v6.
-task Test6 -If $env:powershell6 {
-	exec {& $env:powershell6 -NoProfile -Command Invoke-Build Test}
+# Synopsis: Test PS Core.
+task test7 {
+	exec {pwsh -NoProfile -Command Invoke-Build test}
 }
 
 # Synopsis: Convert markdown to HTML.
-task Markdown {
+task markdown {
 	assert (Test-Path $env:MarkdownCss)
 	exec { pandoc.exe @(
 		'README.md'
@@ -145,7 +140,7 @@ task Markdown {
 }
 
 # Synopsis: Set $script:Version.
-task Version {
+task version {
 	($script:Version = Get-Version)
 	# manifest version
 	$data = & ([scriptblock]::Create([IO.File]::ReadAllText("$ModuleRoot\$ModuleName.psd1")))
@@ -155,23 +150,23 @@ task Version {
 }
 
 # Synopsis: Make the package in z.
-task Package Build, Help, TestHelp, Test, Test2, Test6, Markdown, {
+task package build, help, testHelp, test, test7, markdown, {
 	remove z
 	$null = mkdir z\$ModuleName
 
 	Copy-Item -Recurse -Destination z\$ModuleName $(
-		'LICENSE.txt'
+		'LICENSE'
 		'README.htm'
 		"$ModuleRoot\*"
 	)
 }
 
 # Synopsis: Make and push the PSGallery package.
-task PushPSGallery Package, Version, {
+task pushPSGallery package, version, {
 	$NuGetApiKey = Read-Host NuGetApiKey
 	Publish-Module -Path z\$ModuleName -NuGetApiKey $NuGetApiKey
 },
-Clean
+clean
 
 # Synopsis: Fast dev round.
-task . Build, Help, Test, Clean
+task . build, help, test, clean
