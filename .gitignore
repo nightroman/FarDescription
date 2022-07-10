@@ -3,6 +3,5 @@ bin/
 obj/
 z
 *.htm*
-AssemblyInfo.cs
+Directory.Build.props
 FarDescription.psd1
-FarDescription.csproj.user

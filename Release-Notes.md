@@ -1,5 +1,9 @@
 # FarDescription Release Notes
 
+## v1.1.0
+
+Use netstandard2.0 for PowerShell v5.1+
+
 ## v1.0.1
 
 Maintenance.
