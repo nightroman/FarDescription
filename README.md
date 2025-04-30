@@ -58,5 +58,5 @@ Import-Module FarDescription
 
 ## See also
 
-- [FarDescription Release Notes](https://github.com/nightroman/FarDescription/blob/master/Release-Notes.md)
-- [about_FarDescription.help.txt](https://github.com/nightroman/FarDescription/blob/master/Module/en-US/about_FarDescription.help.txt)
+- [FarDescription Release Notes](https://github.com/nightroman/FarDescription/blob/main/Release-Notes.md)
+- [about_FarDescription.help.txt](https://github.com/nightroman/FarDescription/blob/main/Module/en-US/about_FarDescription.help.txt)

@@ -1,13 +1,8 @@
-﻿
-// FarDescription module
-// Copyright (c) Roman Kuzmin
+﻿namespace FarDescription;
 
-namespace FarDescription
+static class Res
 {
-	static class Res
-	{
-		public const string Noun = "FarDescription";
-		public const string NounSynopsis = Noun + "Synopsis";
-		public const string FakeLineBreak = " _ ";
-	}
+	public const string Noun = "FarDescription";
+	public const string NounSynopsis = Noun + "Synopsis";
+	public const string FakeLineBreak = " _ ";
 }

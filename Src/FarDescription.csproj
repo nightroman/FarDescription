@@ -1,14 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>13</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="PowerShellStandard.Library" Version="5.1.1" />
   </ItemGroup>
-  <PropertyGroup>
-    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <PostBuildEvent>ib publish -Configuration $(Configuration) -TargetFramework $(TargetFramework)</PostBuildEvent>
-  </PropertyGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="pwsh -NoProfile -Command Invoke-Build publish -Configuration $(Configuration)" />
+  </Target>
 </Project>
